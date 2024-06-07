@@ -1,7 +1,6 @@
 pandas==2.2.2
 numpy==1.26.4
 streamlit
-pickle
 pip==24.0
 joblib
 pyreadstat
