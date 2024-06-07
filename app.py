@@ -18,14 +18,6 @@ except FileNotFoundError:
     st.error(f"Error: Data file '{data_path}' not found!")
     st.stop()
 
-# Using matplotlib for a plot
-plt.figure(figsize=(10, 6))
-plt.bar(results['Category'], results['Percentage'], color='skyblue')
-plt.xlabel('Category')
-plt.ylabel('Percentage')
-plt.title('Category Distribution')
-plt.show()
-
 # Load the trained model
 try:
     model = joblib.load(model_path)
