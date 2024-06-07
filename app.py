@@ -7,7 +7,7 @@ from streamlit_option_menu import option_menu
 from sklearn.ensemble import RandomForestClassifier
 
 # Define the path to your files
-data_path = 'C:/Users/FIRGI/Firgi projek/Data.sav'
+data_path = r"C:/Users/FIRGI/Firgi projek/Data.sav"
 model_path = 'C:/Users/FIRGI/Firgi projek/Random_forest_model.pkl'
 
 # Load dataset
