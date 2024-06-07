@@ -5,11 +5,6 @@ import pyreadstat
 from PIL import Image
 from streamlit_option_menu import option_menu
 from sklearn.ensemble import RandomForestClassifier
-import logging
-
-# Set up logging
-logging.basicConfig(level=logging.DEBUG)
-logger = logging.getLogger(__name__)
 
 # Define the path to your files
 data_path = 'C:/Users/FIRGI/Firgi projek/Data.sav'
@@ -18,24 +13,16 @@ model_path = 'C:/Users/FIRGI/Firgi projek/Random_forest_model.pkl'
 # Load dataset
 try:
     data, meta = pyreadstat.read_sav(data_path)
-    logger.debug("Data loaded successfully.")
 except FileNotFoundError:
     st.error(f"Error: Data file '{data_path}' not found!")
-    st.stop()
-except Exception as e:
-    st.error(f"Error loading data: {e}")
     st.stop()
 
 # Load the trained model
 try:
     model = joblib.load(model_path)
     expected_columns = model.feature_names_in_
-    logger.debug("Model loaded successfully.")
 except FileNotFoundError:
     st.error(f"Error: Model file '{model_path}' not found!")
-    st.stop()
-except Exception as e:
-    st.error(f"Error loading model: {e}")
     st.stop()
 
 # Set page configuration
@@ -65,10 +52,7 @@ st.markdown(
 )
 
 # Sidebar with logo
-try:
-    st.sidebar.image('C:/Users/FIRGI/Firgi projek/Logo.png', use_column_width=True)
-except FileNotFoundError:
-    st.error("Error: Logo file not found!")
+st.sidebar.image('C:/Users/FIRGI/Firgi projek/Logo.png', use_column_width=True)
 
 # Initialize navigation state
 if 'navigation' not in st.session_state:
@@ -151,10 +135,7 @@ def preprocess_input(input_df):
 
 if st.session_state.navigation == "Home":
     st.write("## HeartBeats")
-    try:
-        st.image('C:/Users/FIRGI/Firgi projek/Beranda.jpg')
-    except FileNotFoundError:
-        st.error("Error: Beranda image file not found.")
+    st.image('C:/Users/FIRGI/Firgi projek/Beranda.jpg')
     
     st.write("""
     HeartBeats adalah platform yang dapat membantu para dokter untuk memberikan diagnosa awal tentang kondisi dan kesehatan jantung. Dengan fitur scan kesehatan jantung yang dimiliki oleh HeartBeats, 
@@ -172,19 +153,21 @@ elif st.session_state.navigation == "Scan Prediction Test":
     
     if st.button('Scan'):
         if any(value is None for value in input_df.iloc[0]):
-            st.error('Error: Harap mengisi semua data terlebih dahulu!')
+            st.error('Harap mengisi semua data terlebih dahulu!')
         else:
             input_df = preprocess_input(input_df)
-            prediction = model.predict(input_df)
-            proba = model.predict_proba(input_df)
-            if prediction[0] == 1:
-                st.error(f'Terdeteksi penyakit jantung dengan probabilitas: {proba[0][1]:.2f}')
-            else:
-                st.success(f'Tidak terdeteksi penyakit jantung dengan probabilitas: {proba[0][0]:.2f}')
+            try:
+                prediction = model.predict(input_df)
+                proba = model.predict_proba(input_df)
+                if prediction[0] == 1:
+                    st.error(f'Terdeteksi penyakit jantung dengan probabilitas: {proba[0][1]:.2f}')
+                else:
+                    st.success(f'Tidak terdeteksi penyakit jantung dengan probabilitas: {proba[0][0]:.2f}')
+            except ValueError as e:
+                st.error(f"Error during prediction: {e}")
     
     if st.button('Kembali'):
         navigate_to("Home")
-
             except ValueError as e:
                 st.error(f"Error during prediction: {e}")
 
