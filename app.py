@@ -167,9 +167,7 @@ elif st.session_state.navigation == "Scan Prediction Test":
                 st.error(f"Error during prediction: {e}")
     
     if st.button('Kembali'):
-        navigate_to("Home")
-            except ValueError as e:
-                st.error(f"Error during prediction: {e}")
+        navigate_to("Home") 
 
 elif st.session_state.navigation == "Contact":
     st.write("## CONTACT PAGE")
@@ -189,27 +187,4 @@ elif st.session_state.navigation == "Contact":
             st.write(f"Thank you, {name}! Your message has been submitted.")
             # Here you can add code to handle the submission, such as sending an email or saving to a database
         else:
-            st.write("Please fill in all fields.")
-                
-            except ValueError as e:
-                st.error(f"Error during prediction: {e}")
-
-elif st.session_state.navigation == "Contact":
-    st.write("## CONTACT PAGE")
-    st.write("Get in touch with us:")
-    st.write("- Email: petikmanggafm@gmail.com")
-    st.write("- Phone: 0852-1234-1117")
-    st.write("- Address: Universitas Negeri Jakarta, Rawamangun, Jakarta Timur")
-
-    st.write("## Contact Form:")
-    name = st.text_input("Name")
-    email = st.text_input("Email")
-    message = st.text_area("Message", height=150)
-    submitted = st.button("## Submit")
-
-    if submitted:
-        if all([name, email, message]):
-            st.write(f"Thank you, {name}! Your message has been submitted.")
-            # Here you can add code to handle the submission, such as sending an email or saving to a database
-        else:
-            st.write("Please fill in all fields.")
+            st.write("Please fill in all fields.")f
