@@ -152,20 +152,21 @@ elif st.session_state.navigation == "Scan Prediction Test":
     
     input_df = Rekap_Data_Pasien()
     
-    if st.button('Scan'):
-        if any(value is None for value in input_df.iloc[0]):
-            st.error('Harap mengisi semua data terlebih dahulu!')
-        else:
-            input_df = preprocess_input(input_df)
-            try:
-                prediction = model.predict(input_df)
-                proba = model.predict_proba(input_df)
-                if prediction[0] == 1:
-                    st.error(f'Terdeteksi penyakit jantung dengan probabilitas: {proba[0][1]:.2f}')
-                else:
-                    st.success(f'Tidak terdeteksi penyakit jantung dengan probabilitas: {proba[0][0]:.2f}')
-            except ValueError as e:
-                st.error(f"Error during prediction: {e}")
+ if st.button('Scan'):
+    if any(value is None for value in input_df.iloc[0]):
+        st.error('Harap mengisi semua data terlebih dahulu!')
+    else:
+        input_df = preprocess_input(input_df)
+        try:
+            prediction = model.predict(input_df)
+            proba = model.predict_proba(input_df)
+            if prediction[0] == 1:
+                st.error(f'Terdeteksi penyakit jantung dengan probabilitas: {proba[0][1] * 100:.2f}%')
+            else:
+                st.success(f'Tidak terdeteksi penyakit jantung dengan probabilitas: {proba[0][0] * 100:.2f}%')
+        except ValueError as e:
+            st.error(f"Error during prediction: {e}")
+
     
     if st.button('Kembali'):
         navigate_to("Home") 
