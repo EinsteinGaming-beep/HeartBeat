@@ -1,6 +1,10 @@
 pandas                : 2.2.2
 numpy                 : 1.26.4
-Streamlit
+streamlit
 pickle
-scikit learn
 pip                   : 24.0
+joblib
+pyreadstat
+pillow
+streamlit-option-menu
+scikit-learn
