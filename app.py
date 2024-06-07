@@ -7,8 +7,8 @@ from streamlit_option_menu import option_menu
 from sklearn.ensemble import RandomForestClassifier
 
 # Define the path to your files
-data_path = r"C:/Users/FIRGI/Firgi projek/Data.sav"
-model_path = 'C:/Users/FIRGI/Firgi projek/Random_forest_model.pkl'
+data_path = ("Data.sav")
+model_path = ('Random_forest_model.pkl')
 
 # Load dataset
 try:
@@ -52,7 +52,7 @@ st.markdown(
 )
 
 # Sidebar with logo
-st.sidebar.image('C:/Users/FIRGI/Firgi projek/Logo.png', use_column_width=True)
+st.sidebar.image('Logo.png', use_column_width=True)
 
 # Initialize navigation state
 if 'navigation' not in st.session_state:
@@ -135,7 +135,7 @@ def preprocess_input(input_df):
 
 if st.session_state.navigation == "Home":
     st.write("## HeartBeats")
-    st.image('C:/Users/FIRGI/Firgi projek/Beranda.jpg')
+    st.image('Beranda.jpg')
     
     st.write("""
     HeartBeats adalah platform yang dapat membantu para dokter untuk memberikan diagnosa awal tentang kondisi dan kesehatan jantung. Dengan fitur scan kesehatan jantung yang dimiliki oleh HeartBeats, 
