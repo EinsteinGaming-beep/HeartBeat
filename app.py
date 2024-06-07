@@ -97,7 +97,7 @@ def Rekap_Data_Pasien():
     res = {'Normal': 0, 'Ada kelainan': 1, 'Hypertrophy': 2}.get(res, None)
     exa = 1 if exa == 'Ya' else 0 if exa == 'Tidak' else None
     slope = {'Meningkat': 0, 'Mendatar': 1, 'Menurun': 2}.get(slope, None)
-    thal = {'Normal': 0, 'Cacat tetap': 6, 'Cacat reversibel': 7}.get(thal, None)
+    thal = {'Normal': 0, 'Normal': 1, 'Cacat tetap': 2, 'Cacat reversibel': 3}.get(thal, None)
 
     data = {
         'age': age,
