@@ -5,6 +5,11 @@ import pyreadstat
 from PIL import Image
 from streamlit_option_menu import option_menu
 from sklearn.ensemble import RandomForestClassifier
+import logging
+
+# Set up logging
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__name__)
 
 # Define the path to your files
 data_path = 'C:/Users/FIRGI/Firgi projek/Data.sav'
@@ -13,20 +18,28 @@ model_path = 'C:/Users/FIRGI/Firgi projek/Random_forest_model.pkl'
 # Load dataset
 try:
     data, meta = pyreadstat.read_sav(data_path)
+    logger.debug("Data loaded successfully.")
 except FileNotFoundError:
     st.error(f"Error: Data file '{data_path}' not found!")
+    st.stop()
+except Exception as e:
+    st.error(f"Error loading data: {e}")
     st.stop()
 
 # Load the trained model
 try:
     model = joblib.load(model_path)
     expected_columns = model.feature_names_in_
+    logger.debug("Model loaded successfully.")
 except FileNotFoundError:
     st.error(f"Error: Model file '{model_path}' not found!")
     st.stop()
+except Exception as e:
+    st.error(f"Error loading model: {e}")
+    st.stop()
 
 # Set page configuration
-st.set_page_config(page_title="HeartBeat", page_icon=":heart:", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="HeartBeats", page_icon=":heart:", layout="wide", initial_sidebar_state="expanded")
 
 # Custom CSS for background colors, fonts, and text justification
 st.markdown(
@@ -52,7 +65,10 @@ st.markdown(
 )
 
 # Sidebar with logo
-st.sidebar.image('C:/Users/FIRGI/Firgi projek/Logo.png', use_column_width=True)
+try:
+    st.sidebar.image('C:/Users/FIRGI/Firgi projek/Logo.png', use_column_width=True)
+except FileNotFoundError:
+    st.error("Error: Logo file not found!")
 
 # Initialize navigation state
 if 'navigation' not in st.session_state:
@@ -134,11 +150,14 @@ def preprocess_input(input_df):
     return input_df
 
 if st.session_state.navigation == "Home":
-    st.write("## HeartBeat")
-    st.image('C:/Users/FIRGI/Firgi projek/Beranda.jpg')
+    st.write("## HeartBeats")
+    try:
+        st.image('C:/Users/FIRGI/Firgi projek/Beranda.jpg')
+    except FileNotFoundError:
+        st.error("Error: Beranda image file not found.")
     
     st.write("""
-    HeartBeat adalah platform yang dapat membantu para dokter untuk memberikan diagnosa awal tentang kondisi dan kesehatan jantung. Dengan fitur scan kesehatan jantung yang dimiliki oleh HeartBeat, 
+    HeartBeats adalah platform yang dapat membantu para dokter untuk memberikan diagnosa awal tentang kondisi dan kesehatan jantung. Dengan fitur scan kesehatan jantung yang dimiliki oleh HeartBeats, 
     setiap dokter dapat terbantu untuk mendapatkan hasil diagnosa terbaik dari platform ini.
     """)
 
@@ -153,46 +172,19 @@ elif st.session_state.navigation == "Scan Prediction Test":
     
     if st.button('Scan'):
         if any(value is None for value in input_df.iloc[0]):
-            st.error('Please fill in all the required fields.')
+            st.error('Error: Harap mengisi semua data terlebih dahulu!')
         else:
-            input_preprocessed = preprocess_input(input_df)
-            try:
-                prediction = model.predict(input_preprocessed)[0]
-                prediction_proba = model.predict_proba(input_preprocessed)[0]
+            input_df = preprocess_input(input_df)
+            prediction = model.predict(input_df)
+            proba = model.predict_proba(input_df)
+            if prediction[0] == 1:
+                st.error(f'Terdeteksi penyakit jantung dengan probabilitas: {proba[0][1]:.2f}')
+            else:
+                st.success(f'Tidak terdeteksi penyakit jantung dengan probabilitas: {proba[0][0]:.2f}')
+    
+    if st.button('Kembali'):
+        navigate_to("Home")
 
-                result = "Penyakit Jantung" if prediction == 1 else "Tidak Ada Penyakit Jantung"
-                prob_sick = prediction_proba[1]
-                prob_healthy = prediction_proba[0]
-                
-                st.write(f"### Prediksi: **{result}**")
-                st.write(f"""
-                    <style>
-                        .result-container {{
-                            background-color: #f8f9fa;
-                            padding: 20px;
-                            border-radius: 10px;
-                            margin-top: 20px;
-                        }}
-                        .result-header {{
-                            font-size: 1.5em;
-                            font-weight: bold;
-                            color: #333;
-                        }}
-                        .result-text {{
-                            font-size: 1.2em;
-                            margin-top: 10px;
-                        }}
-                    </style>
-                    <div class="result-container">
-                        <div class="result-header">Prediksi: {result}</div>
-                        <div class="result-text">Probabilitas Penyakit Jantung: {prob_sick:.2%}</div>
-                        <div class="result-text">Probabilitas Tidak Ada Penyakit Jantung: {prob_healthy:.2%}</div>
-                    </div>
-                """, unsafe_allow_html=True)
-                
-                if st.button('Kembali'):
-                    navigate_to("Home")
-                
             except ValueError as e:
                 st.error(f"Error during prediction: {e}")
 
