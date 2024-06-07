@@ -3,6 +3,8 @@ import pandas as pd
 import joblib
 import pyreadstat
 from PIL import Image
+from tabulate import tabulate
+import matplotlib.pyplot as plt
 from streamlit_option_menu import option_menu
 from sklearn.ensemble import RandomForestClassifier
 
@@ -12,10 +14,34 @@ model_path = ('Random_forest_model.pkl')
 
 # Load dataset
 try:
+    data_path = ("Data.sav")
     data, meta = pyreadstat.read_sav(data_path)
 except FileNotFoundError:
     st.error(f"Error: Data file '{data_path}' not found!")
     st.stop()
+
+# Step 2: Process the Data
+category_counts = data['category'].value_counts()
+category_percentages = category_counts / category_counts.sum() * 100
+
+ Create a DataFrame with the results
+results = pd.DataFrame({
+    'Category': category_counts.index,
+    'Count': category_counts.values,
+    'Percentage': category_percentages.values
+})
+
+# Step 3: Present the Data
+# Using tabulate for a table
+print(tabulate(results, headers='keys', tablefmt='pretty'))
+
+# Using matplotlib for a plot
+plt.figure(figsize=(10, 6))
+plt.bar(results['Category'], results['Percentage'], color='skyblue')
+plt.xlabel('Category')
+plt.ylabel('Percentage')
+plt.title('Category Distribution')
+plt.show()
 
 # Load the trained model
 try:
