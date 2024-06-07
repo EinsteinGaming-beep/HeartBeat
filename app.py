@@ -187,4 +187,4 @@ elif st.session_state.navigation == "Contact":
             st.write(f"Thank you, {name}! Your message has been submitted.")
             # Here you can add code to handle the submission, such as sending an email or saving to a database
         else:
-            st.write("Please fill in all fields.")f
+            st.write("Please fill in all fields.")
