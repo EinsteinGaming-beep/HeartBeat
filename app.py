@@ -24,7 +24,7 @@ except FileNotFoundError:
 category_counts = data['category'].value_counts()
 category_percentages = category_counts / category_counts.sum() * 100
 
- Create a DataFrame with the results
+# Create a DataFrame with the results
 results = pd.DataFrame({
     'Category': category_counts.index,
     'Count': category_counts.values,
